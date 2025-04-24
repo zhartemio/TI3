@@ -1,0 +1,10 @@
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\bin\Debug\TI_3.exe.config
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\bin\Debug\TI_3.exe
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\bin\Debug\TI_3.pdb
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.csproj.AssemblyReference.cache
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.MainForm.resources
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.Properties.Resources.resources
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.csproj.GenerateResource.cache
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.csproj.CoreCompileInputs.cache
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.exe
+D:\Жигимонт\Уник\ТИ\ти3\TI_3\obj\Debug\TI_3.pdb

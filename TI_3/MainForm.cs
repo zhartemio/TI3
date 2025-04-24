@@ -38,13 +38,13 @@ public partial class MainForm : Form
 
         if (TextBoxP.Text.Length == 0)
         {
-			MessageBox.Show("Недопустимое значение: P не должен быть нулевым!", "Проблема");
+			MessageBox.Show("Проверьте, что вы ввели значение P!", "Ошибка");
 			return;
         }
         
         if (TextBoxQ.Text.Length == 0)
         {
-			MessageBox.Show("Недопустимое значение: Q не должен быть нулевым!", "Проблема");
+			MessageBox.Show("Проверьте, что вы ввели значение Q!", "Ошибка");
 			return;
         }
 
@@ -56,27 +56,27 @@ public partial class MainForm : Form
             IntegerP = BigInteger.Parse(TextBoxP.Text);
             if (!RSA.IsPrime(IntegerP))
             {
-				MessageBox.Show("Недопустимое значение: P не является простым!", "Проблема");
+				MessageBox.Show("P не простое!", "Ошибка");
 				return;
             }
 
             IntegerQ = BigInteger.Parse(TextBoxQ.Text);
             if (!RSA.IsPrime(IntegerQ))
             {
-				MessageBox.Show("Недопустимое значение: Q не является простым!", "Проблема");
+				MessageBox.Show("Q не простое!", "Ошибка");
 				return;
             }
         }
         catch
         {
-			MessageBox.Show("Пожалуйста, убедитесь, что числа находятся в допустимом диапазоне.");
+			MessageBox.Show("Числа не подходят.");
 			return;
         }
 
         IntegerR = IntegerQ * IntegerP;
 		if (IntegerR < 256 || IntegerR > ushort.MaxValue)
 		{
-			MessageBox.Show($"Значение P * Q должно быть не менее 256 и не превышать {ushort.MaxValue}.", "Проблема");
+			MessageBox.Show($"Значение P * Q должно быть не подходит.", "Ошибка");
 			return;
 		}
 
@@ -86,21 +86,21 @@ public partial class MainForm : Form
 
         if (TextBoxD.Text.Length == 0)
         {
-			MessageBox.Show("Значение закрытой константы Кс не должно быть пустым.", "Проблема");
+			MessageBox.Show("Значение Кс неверное.", "Ошибка");
 			return;
         }
         
         IntegerD = BigInteger.Parse(TextBoxD.Text);
         if (IntegerD <= 1 || IntegerD >= IntegerFunctionR)
         {
-			MessageBox.Show("Значение Кс должно быть в пределах от 1 до φ(R) - 1.", "Проблема");
+			MessageBox.Show("Значение Кс должно быть в пределах от 1 до φ(R) - 1.", "Ошибка");
 			return;
         }
         
         BigInteger gcd = RSA.FindGcd(IntegerD, IntegerFunctionR);
         if (gcd != 1)
         {
-			MessageBox.Show("Ваша открытая константа Ko не является взаимно простой с функцией Эйлера!", "Предупреждение");
+			MessageBox.Show("Ko и ф(R) не являются взаимно простыми!", "Ошибка");
 			return;
         }
 
@@ -123,43 +123,19 @@ public partial class MainForm : Form
         ResultButton.Enabled = false;
     }
 
-    void RadioButtonCipher_CheckedChanged(object sender, EventArgs e)
-    {
-        button3.Enabled = false;
-        button1.Enabled = true;
-        button2.Enabled = true;
-        button4.Enabled = false;
-        ResultButton.Text = "Зашифровать/Дешифровать";
-        CipherText.Clear();
-    }
-
-    void RadioButtonDecipher_CheckedChanged(object sender, EventArgs e)
-    {
-        button1.Enabled = false;
-        button3.Enabled = true;
-        button4.Enabled = true;
-        button2.Enabled = false;
-		ResultButton.Text = "Зашифровать/Дешифровать";
-		PlainText.Clear();
-    }
+    
 
     void ResultButton_Click(object sender, EventArgs e)
     {
-        if (RadioButtonCipher.Checked)
+
+        if (PlainText.Text.Length != 0)
         {
-            if (PlainText.Text.Length == 0)
-            {
-				MessageBox.Show("Исходный текст не должен быть пустым. Пожалуйста, откройте файл.", "Проблема");
-
-				return;
-            }
-
             CipherResult = new ushort[OpenedPlainFileBytes.Length];
             for (int i = 0; i < CipherResult.Length; i++)
             {
                 CipherResult[i] = OpenedPlainFileBytes[i];
             }
-            
+
             for (int i = 0; i < CipherResult.Length; i++)
             {
                 CipherResult[i] = (ushort)RSA.QuickPowerMod(CipherResult[i], IntegerE, IntegerR);
@@ -167,18 +143,10 @@ public partial class MainForm : Form
 
             CipherText.Text = string.Join(" ", CipherResult);
         }
-
-        if (RadioButtonDecipher.Checked)
+        else if (CipherText.Text.Length != 0)
         {
-            if (CipherText.Text.Length == 0)
-            {
-				MessageBox.Show("Зашифрованный текст отсутствует. Пожалуйста, откройте файл для продолжения.", "Проблема");
-
-				return;
-            }
-
             ushort[] tempShort = new ushort[CipherResult.Length];
-            
+
             for (int i = 0; i < tempShort.Length; i++)
             {
                 tempShort[i] = (ushort)RSA.QuickPowerMod(CipherResult[i], IntegerD, IntegerR);
@@ -189,7 +157,7 @@ public partial class MainForm : Form
             {
                 var item = tempShort[index];
                 var bytes = BitConverter.GetBytes(item);
-                if (!BitConverter.IsLittleEndian) 
+                if (!BitConverter.IsLittleEndian)
                     Array.Reverse(bytes);
                 DecipherResult[index] = bytes[0];
 
@@ -197,7 +165,8 @@ public partial class MainForm : Form
 
             PlainText.Text = string.Join(" ", tempShort);
         }
-    }
+}
+    
 
     private void button1_Click(object sender, EventArgs e)
     {
@@ -212,7 +181,7 @@ public partial class MainForm : Form
     {
         if (CipherText.Text.Length == 0)
         {
-            MessageBox.Show("Пусто!", "Проблема");
+            MessageBox.Show("Введите текст для корректной работы программы!", "Ошибка");
             return;
         }
         if (SaveFileDialog.ShowDialog() != DialogResult.Cancel)
@@ -254,7 +223,7 @@ public partial class MainForm : Form
     {
         if (PlainText.Text.Length == 0)
         {
-			MessageBox.Show("Пусто!", "Проблема");
+			MessageBox.Show("Введите текст для корректной работы программы!", "Ошибка");
 			return;
         }
 
